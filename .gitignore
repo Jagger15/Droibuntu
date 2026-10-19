@@ -1,0 +1,6 @@
+*.jks
+*.keystore
+.env*
+*.apk
+*.zip
+__pycache__/
