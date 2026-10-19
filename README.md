@@ -12,9 +12,12 @@ including phones, tablets and Quest headsets.
 3. Choose Check stable release, then Download & verify APK when an update is available.
 4. Choose Install verified APK and confirm in Android's installer.
 
-Checks are manual in the current app. It verifies GitHub's SHA-256 asset digest,
-package name, newer version code and matching signing certificate. Existing
-Test101 installations need a newer APK to install an update.
+Test102 adds a small Home dot for newer releases, with quiet metadata checks when
+Home becomes visible (at most every six hours). Disable it in APK update settings.
+Downloads and installation remain manual. Test101 users can check manually to get
+Test102. APK verification checks GitHub's SHA-256 asset digest, package name, newer
+version code and matching signing certificate. Test102 defaults to this repository;
+previously configured sources are preserved.
 
 ## Project status
 
