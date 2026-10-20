@@ -19,6 +19,14 @@ Test102. APK verification checks GitHub's SHA-256 asset digest, package name, ne
 version code and matching signing certificate. Test102 defaults to this repository;
 previously configured sources are preserved.
 
+## Latest build: Test104
+
+Includes compact themed Actions, wallpaper alignment fixes, per-orientation window
+placement, rotating app pairs, additional Undo and clearer launch recovery.
+69 focused checks passed; phone and Quest device testing remains pending.
+Use the release's `Droibuntu-Test104-source.zip` for the Android application source;
+GitHub's automatic Source code archives contain this download-site repository.
+
 ## Project status
 
 Experimental. Build checks are not device compatibility guarantees. Current
