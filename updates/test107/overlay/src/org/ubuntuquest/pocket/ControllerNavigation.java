@@ -34,7 +34,9 @@ final class ControllerNavigation implements InputManager.InputDeviceListener {
  private void stopStick(){handler.removeCallbacks(repeat);direction=0;device=-1;}
  private boolean gamepad(KeyEvent event){return event.isFromSource(InputDevice.SOURCE_GAMEPAD)||event.isFromSource(InputDevice.SOURCE_JOYSTICK);}
  private void prepare(){visible=true;root.getOverlay().add(ring);View focus=root.findFocus();if(focus==null||focus==root||(!(focus instanceof DesktopView)&&!(focus instanceof EditText)&&!focus.isClickable())){
-   for(View candidate:root.getFocusables(View.FOCUS_FORWARD))if(candidate.isShown()&&candidate.isEnabled()&&(candidate.isClickable()||candidate instanceof EditText||candidate instanceof DesktopView)){candidate.requestFocusFromTouch();break;}
+   java.util.ArrayList<View> candidates=new java.util.ArrayList<>();
+   root.addFocusables(candidates,View.FOCUS_FORWARD,View.FOCUSABLES_ALL);
+   for(View candidate:candidates)if(candidate.isShown()&&candidate.isEnabled()&&(candidate.isClickable()||candidate instanceof EditText||candidate instanceof DesktopView)){candidate.requestFocusFromTouch();break;}
   } }
  boolean key(KeyEvent event){
   int key=event.getKeyCode();boolean pad=gamepad(event);
