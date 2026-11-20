@@ -14,7 +14,6 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
       - name: Reconstruct verified source
         run: python3 updates/test107/prepare_source.py build/test107
       - name: Test
@@ -25,11 +24,17 @@ jobs:
       - name: Build unsigned APK
         working-directory: build/test107
         run: |
-          sdkmanager --install 'platforms;android-34' 'build-tools;35.0.0'
+          mkdir -p /tmp/droibuntu-sdk
+          curl -fSL --retry 3 -o /tmp/droibuntu-sdk/platform.zip https://dl.google.com/android/repository/platform-34-ext7_r03.zip
+          curl -fSL --retry 3 -o /tmp/droibuntu-sdk/tools.zip https://dl.google.com/android/repository/build-tools_r35_linux.zip
+          echo "16fdb74c55e59ae3ef52def135aec713508467bd56d7dabcd8c9be31fa8b20f3  /tmp/droibuntu-sdk/platform.zip" | sha256sum -c -
+          echo "bd3a4966912eb8b30ed0d00b0cda6b6543b949d5ffe00bea54c04c81e1561d88  /tmp/droibuntu-sdk/tools.zip" | sha256sum -c -
+          unzip -q /tmp/droibuntu-sdk/platform.zip -d /tmp/droibuntu-sdk
+          unzip -q /tmp/droibuntu-sdk/tools.zip -d /tmp/droibuntu-sdk
           curl -fSL --retry 3 -o /tmp/ecj.jar https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.37.0/ecj-3.37.0.jar
           echo "cde026ff966b48b5e5f148b6f041ceff3cf4f85cf75155f4ec0f40e4ee14b545  /tmp/ecj.jar" | sha256sum -c -
-          export ANDROID_JAR="$ANDROID_HOME/platforms/android-34/android.jar"
-          export BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          export ANDROID_JAR="/tmp/droibuntu-sdk/android-34/android.jar"
+          export BUILD_TOOLS="/tmp/droibuntu-sdk/android-15"
           export ECJ_JAR=/tmp/ecj.jar
           python3 tools/build-with-watch.py phone unsigned
       - uses: actions/upload-artifact@v4
