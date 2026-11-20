@@ -4,3 +4,8 @@
 *.apk
 *.zip
 __pycache__/
+
+/build/
+/android/
+*.p12
+*.pfx

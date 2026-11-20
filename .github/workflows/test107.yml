@@ -1,0 +1,39 @@
+name: Validate Test107 foldables and controllers
+on:
+  workflow_dispatch:
+  pull_request:
+    paths: ['updates/test107/**', '.github/workflows/test107.yml']
+permissions:
+  contents: read
+jobs:
+  android:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Reconstruct verified source
+        run: python3 updates/test107/prepare_source.py build/test107
+      - name: Test
+        working-directory: build/test107
+        run: |
+          bash tools/test-fold-controller.sh
+          python3 -m unittest discover -s tests -p 'test_*.py' -q
+      - name: Build unsigned APK
+        working-directory: build/test107
+        run: |
+          sdkmanager --install 'platforms;android-34' 'build-tools;35.0.0'
+          curl -fSL --retry 3 -o /tmp/ecj.jar https://repo.maven.apache.org/maven2/org/eclipse/jdt/ecj/3.37.0/ecj-3.37.0.jar
+          echo "cde026ff966b48b5e5f148b6f041ceff3cf4f85cf75155f4ec0f40e4ee14b545  /tmp/ecj.jar" | sha256sum -c -
+          export ANDROID_JAR="$ANDROID_HOME/platforms/android-34/android.jar"
+          export BUILD_TOOLS="$ANDROID_HOME/build-tools/35.0.0"
+          export ECJ_JAR=/tmp/ecj.jar
+          python3 tools/build-with-watch.py phone unsigned
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Droibuntu-Test107-unsigned-APK
+          path: build/test107/dist/Droibuntu-Test107-unsigned.apk
+          if-no-files-found: error
